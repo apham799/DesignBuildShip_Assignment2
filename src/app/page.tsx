@@ -31,7 +31,15 @@ const sections: { heading: string; entries: Entry[] }[] = [
         status: "Draft · 29 artifacts",
         swatches: ["#111315", "#F2F2EE", "#009B3A", "#00A1DE", "#522398", "#C60C30", "#F9E300"],
       },
-      { label: "03", title: "Mood Board 03", description: "Theme to come.", status: "Not started" },
+      {
+        label: "03",
+        title: "Under the Lights",
+        description:
+          "A space arcade: ball tracers like shooting stars, high-score data, pinball glow, and planetarium blue.",
+        href: "/moodboards/3",
+        status: "Draft · 30 artifacts",
+        swatches: ["#07090F", "#141B2E", "#FFB547", "#C8FF4D", "#5CE1E6", "#FF5A5F"],
+      },
     ],
   },
   {
