@@ -6,4 +6,4 @@ export { Badge, DetailPanel, FacilityCard, ListRow, Stat } from "./ui/content";
 export { Alert, EmptyState, ErrorState, FacilityCardSkeleton, LoadingNote, Skeleton, Toast } from "./ui/feedback";
 export { CloseButton, Modal } from "./ui/modal";
 export { Spinner, type Force } from "./ui/shared";
-export { facilities, statusBadge, type Facility } from "./sample";
+export { facilities, statusBadge, type Facility } from "../sample";

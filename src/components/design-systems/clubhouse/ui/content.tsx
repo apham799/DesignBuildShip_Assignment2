@@ -1,7 +1,7 @@
 // Content components: badge, stat, facility card, list row, detail panel.
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { statusBadge, type Facility } from "../sample";
+import { statusBadge, type Facility } from "../../sample";
 import { elevation } from "../tokens";
 import { cx, type Force } from "./shared";
 

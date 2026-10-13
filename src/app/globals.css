@@ -82,6 +82,33 @@
   --color-line-orange: #f9461c;
   --color-line-yellow: #f9e300;
 
+  /* Design system 02 — semantic roles built on the Lakefront palette */
+  --color-line-bg: #f2f2ee;
+  --color-line-surface: #ffffff;
+  --color-line-text: #111315;
+  --color-line-muted: #4a5057;
+  --color-line-rule: #d9dcdf;
+  --color-line-edge: #6b7178;
+  --color-line-accent: #111315;
+  --color-line-accent-hover: #33383d;
+  --color-line-on-accent: #ffffff;
+  --color-line-link: #0071a8;
+  --color-line-focus: #0071a8;
+  --color-line-highlight: #f9e300;
+  --color-line-highlight-tint: #fff7b3;
+  --color-line-danger: #c60c30;
+  --color-line-danger-hover: #9e0a26;
+  --color-line-success: #00703a;
+  --color-line-success-tint: #e3f2e8;
+  --color-line-warning: #7a5000;
+  --color-line-warning-tint: #fff4cc;
+  --color-line-error: #b00a2a;
+  --color-line-error-tint: #fce4e8;
+  --color-line-info: #005a8c;
+  --color-line-info-tint: #e1f1f9;
+  --color-line-disabled: #9aa0a6;
+  --color-line-disabled-bg: #ecedea;
+
   /* Mood board 03 — Under the Lights */
   --color-night-ink: #07090f;
   --color-night-navy: #0e1424;

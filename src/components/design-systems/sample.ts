@@ -1,6 +1,9 @@
-// Placeholder facilities for showing components. Not real listings.
+// Placeholder facilities shared by every design system. Not real listings.
 
 export type FacilityStatus = "open" | "closing" | "seasonal" | "closed";
+
+// Practice types, used for color-coded markers in some systems.
+export type FacilityKind = "range" | "short" | "sim" | "dome" | "par3";
 
 export type Facility = {
   id: string;
@@ -15,6 +18,10 @@ export type Facility = {
   bucket: string;
   longest: string;
   schedule: { days: string; hours: string }[];
+  // Chicago street-grid address, e.g. "3200 N · 500 W".
+  grid: string;
+  kinds: FacilityKind[];
+  transit: string;
 };
 
 export const facilities: Facility[] = [
@@ -35,6 +42,9 @@ export const facilities: Facility[] = [
       { days: "Fri – Sat", hours: "7 AM – 11 PM" },
       { days: "Sunday", hours: "8 AM – 9 PM" },
     ],
+    grid: "3200 N · 500 W",
+    kinds: ["range", "short"],
+    transit: "Red Line · Belmont · 12 min walk",
   },
   {
     id: "southshore",
@@ -49,6 +59,9 @@ export const facilities: Facility[] = [
     bucket: "$9",
     longest: "260y",
     schedule: [{ days: "Daily", hours: "8 AM – 7 PM" }],
+    grid: "7100 S · 2400 E",
+    kinds: ["range", "short"],
+    transit: "Metra Electric · South Shore · 8 min walk",
   },
   {
     id: "westpark",
@@ -63,6 +76,9 @@ export const facilities: Facility[] = [
     bucket: "$14",
     longest: "Indoor",
     schedule: [{ days: "Nov – Mar", hours: "9 AM – 10 PM" }],
+    grid: "1600 N · 4800 W",
+    kinds: ["dome", "range"],
+    transit: "Green Line · Central · 15 min walk",
   },
   {
     id: "harbor",
@@ -77,6 +93,9 @@ export const facilities: Facility[] = [
     bucket: "—",
     longest: "—",
     schedule: [{ days: "Season", hours: "Closed" }],
+    grid: "600 N · 400 E",
+    kinds: ["short"],
+    transit: "Bus 66 · Chicago Ave · 5 min walk",
   },
 ];
 
