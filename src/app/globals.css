@@ -25,6 +25,7 @@
   --font-night-display: var(--font-unbounded);
   --font-night-mono: var(--font-jetbrains-mono);
   --font-night-serif: var(--font-instrument-serif);
+  --font-night-body: var(--font-space-grotesk);
 }
 
 @theme {
@@ -122,6 +123,35 @@
   --color-night-coral: #ff5a5f;
   --color-night-turf: #1e6b4a;
   --color-night-violet: #8b7cff;
+
+  /* Design system 03 — semantic roles built on the Under the Lights palette */
+  --color-night-bg: #07090f;
+  --color-night-surface: #141b2e;
+  --color-night-raised: #1c2440;
+  --color-night-field: #0e1424;
+  --color-night-text: #f4f1e8;
+  --color-night-muted: #9aa4bf;
+  --color-night-rule: #26304a;
+  --color-night-edge: #6b78a0;
+  --color-night-accent: #c8ff4d;
+  --color-night-accent-hover: #ddff8a;
+  --color-night-on-accent: #07090f;
+  --color-night-select: #5ce1e6;
+  --color-night-focus: #5ce1e6;
+  --color-night-link: #5ce1e6;
+  --color-night-special: #a99dff;
+  --color-night-danger: #ff6b70;
+  --color-night-danger-hover: #ff8a8e;
+  --color-night-success: #a6f28a;
+  --color-night-success-tint: #12301f;
+  --color-night-warning: #ffc266;
+  --color-night-warning-tint: #33240b;
+  --color-night-error: #ff8a8e;
+  --color-night-error-tint: #3a1418;
+  --color-night-info: #6fe6eb;
+  --color-night-info-tint: #0d2a33;
+  --color-night-disabled: #5a6480;
+  --color-night-disabled-bg: #1a2032;
 
   /* Tracers draw on a path with pathLength="1" and stroke-dasharray="1". */
   --animate-tracer: tracer 3.6s ease-out infinite;

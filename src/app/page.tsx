@@ -61,7 +61,14 @@ const sections: { heading: string; entries: Entry[] }[] = [
         status: "Draft",
         swatches: ["#F2F2EE", "#FFFFFF", "#111315", "#0071A8", "#F9E300", "#C60C30"],
       },
-      { label: "03", title: "Design System 03", description: "Based on Mood Board 03.", status: "Not started" },
+      {
+        label: "03",
+        title: "Under the Lights",
+        description: "UI kit from Mood Board 03: dark arcade components that glow, every state, and UI states.",
+        href: "/design-systems/3",
+        status: "Draft",
+        swatches: ["#07090F", "#141B2E", "#F4F1E8", "#C8FF4D", "#5CE1E6", "#A99DFF"],
+      },
     ],
   },
   {
