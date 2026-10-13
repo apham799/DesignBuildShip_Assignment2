@@ -43,6 +43,31 @@
   --color-club-ink: #2b2a28;
   --color-club-slate: #23302a;
 
+  /* Design system 01 — semantic roles built on the Clubhouse palette */
+  --color-club-bg: #e9dfc8;
+  --color-club-surface: #f8f2e4;
+  --color-club-field: #fffcf4;
+  --color-club-text: #2b2a28;
+  --color-club-muted: #5f5a50;
+  --color-club-rule: #d8cbab;
+  --color-club-edge: #8a7d63;
+  --color-club-accent: #1f4d3a;
+  --color-club-accent-hover: #16362a;
+  --color-club-on-accent: #f3ebd8;
+  --color-club-flag: #b23a2e;
+  --color-club-flag-hover: #8f2d23;
+  --color-club-focus: #3e6e8e;
+  --color-club-success: #2f6b4f;
+  --color-club-success-tint: #e2eadb;
+  --color-club-warning: #7a5714;
+  --color-club-warning-tint: #f4e7c6;
+  --color-club-error: #a3342a;
+  --color-club-error-tint: #f5dcd6;
+  --color-club-info: #335c78;
+  --color-club-info-tint: #dbe5ea;
+  --color-club-disabled: #9a927f;
+  --color-club-disabled-bg: #ece4d2;
+
   /* Mood board 02 — Lakefront Line */
   --color-line-paper: #f2f2ee;
   --color-line-ink: #111315;
@@ -94,6 +119,36 @@
   @keyframes snow {
     from { transform: translateY(-16px); }
     to { transform: translateY(280px); }
+  }
+}
+
+/*
+ * Interaction-state variants for design system components. Each one fires on
+ * the real pseudo-class and also on data-force, so the docs can render every
+ * state side by side with the exact same styles.
+ */
+@custom-variant state-hover {
+  &:hover:not(:disabled):not([aria-disabled="true"]) {
+    @slot;
+  }
+  &[data-force="hover"] {
+    @slot;
+  }
+}
+@custom-variant state-focus {
+  &:focus-visible {
+    @slot;
+  }
+  &[data-force="focus"] {
+    @slot;
+  }
+}
+@custom-variant state-active {
+  &:active:not(:disabled):not([aria-disabled="true"]) {
+    @slot;
+  }
+  &[data-force="active"] {
+    @slot;
   }
 }
 

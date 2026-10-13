@@ -45,7 +45,14 @@ const sections: { heading: string; entries: Entry[] }[] = [
   {
     heading: "Design Systems",
     entries: [
-      { label: "01", title: "Design System 01", description: "Based on Mood Board 01.", status: "Not started" },
+      {
+        label: "01",
+        title: "Clubhouse Almanac",
+        description: "UI kit from Mood Board 01: color and type roles, components in every state, and UI states.",
+        href: "/design-systems/1",
+        status: "Draft",
+        swatches: ["#E9DFC8", "#F8F2E4", "#2B2A28", "#1F4D3A", "#B23A2E", "#3E6E8E"],
+      },
       { label: "02", title: "Design System 02", description: "Based on Mood Board 02.", status: "Not started" },
       { label: "03", title: "Design System 03", description: "Based on Mood Board 03.", status: "Not started" },
     ],
