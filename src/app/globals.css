@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fafaf9;
+  --foreground: #1c1917;
 }
 
 @theme inline {
@@ -10,17 +10,33 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Mood board 01 — Clubhouse Almanac */
+  --font-club-serif: var(--font-fraunces);
+  --font-club-sign: var(--font-oswald);
+  --font-club-mono: var(--font-courier-prime);
+  --font-club-hand: var(--font-caveat);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@theme {
+  /* Mood board 01 — Clubhouse Almanac */
+  --color-club-green: #1f4d3a;
+  --color-club-green-deep: #16362a;
+  --color-club-turf: #2f6b4f;
+  --color-club-rough: #a7b98a;
+  --color-club-cream: #f3ebd8;
+  --color-club-paper: #f8f2e4;
+  --color-club-page: #e9dfc8;
+  --color-club-red: #b23a2e;
+  --color-club-brass: #b8893b;
+  --color-club-lake: #3e6e8e;
+  --color-club-sand: #d9c49a;
+  --color-club-ink: #2b2a28;
+  --color-club-slate: #23302a;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
