@@ -45,12 +45,15 @@ type CardProps = {
   facility: Facility;
   href?: string;
   saved?: boolean;
+  selected?: boolean;
   force?: Force;
   action?: ReactNode;
+  // When set, the card link selects the facility in place instead of navigating.
+  onSelect?: () => void;
 };
 
 // The whole card is one link (a stretched link on the title). Extra actions sit above it.
-export function FacilityCard({ facility, href = "#", saved = false, force, action }: CardProps) {
+export function FacilityCard({ facility, href = "#", saved = false, selected = false, force, action, onSelect }: CardProps) {
   const badge = statusBadge[facility.status];
   return (
     <article
@@ -61,9 +64,10 @@ export function FacilityCard({ facility, href = "#", saved = false, force, actio
         "state-hover:shadow-[0_2px_4px_rgba(43,42,40,0.12),0_16px_28px_-14px_rgba(31,77,58,0.55)] has-[a:hover]:shadow-[0_2px_4px_rgba(43,42,40,0.12),0_16px_28px_-14px_rgba(31,77,58,0.55)]",
         "has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-club-focus has-[a:focus-visible]:ring-offset-2 has-[a:focus-visible]:ring-offset-club-bg state-focus:ring-2 state-focus:ring-club-focus state-focus:ring-offset-2 state-focus:ring-offset-club-bg",
         saved && "border-club-flag",
+        selected && "ring-2 ring-club-select",
       )}
     >
-      <header className="flex items-center justify-between rounded-t bg-club-accent px-5 py-2.5 text-club-on-accent">
+      <header className="flex items-center justify-between rounded-t border-b-[3px] border-double border-club-text px-5 py-2.5 text-club-text">
         <span className="font-club-sign text-[11px] font-medium uppercase tracking-[0.25em]">
           {facility.area} <span className="font-club-mono normal-case tracking-normal">· {facility.distance}</span>
         </span>
@@ -76,7 +80,19 @@ export function FacilityCard({ facility, href = "#", saved = false, force, actio
       <div className="flex flex-1 flex-col gap-4 p-5">
         <div>
           <h3 className="font-club-serif text-[1.375rem] font-semibold leading-tight text-club-text">
-            <Link href={href} className="outline-none after:absolute after:inset-0 after:content-['']">
+            <Link
+              href={href}
+              aria-current={selected ? "true" : undefined}
+              onClick={
+                onSelect
+                  ? (e) => {
+                      e.preventDefault();
+                      onSelect();
+                    }
+                  : undefined
+              }
+              className="outline-none after:absolute after:inset-0 after:content-['']"
+            >
               {facility.name}
             </Link>
           </h3>
@@ -111,23 +127,25 @@ type RowProps = {
   href?: string;
   selected?: boolean;
   force?: Force;
+  // Closed facilities are disabled by default; pass false to keep them openable.
+  disabled?: boolean;
+  onSelect?: () => void;
 };
 
-export function ListRow({ facility, index, href = "#", selected = false, force }: RowProps) {
+export function ListRow({ facility, index, href = "#", selected = false, force, disabled = facility.status === "closed", onSelect }: RowProps) {
   const badge = statusBadge[facility.status];
-  const disabled = facility.status === "closed";
   const inner = (
     <>
       <span
         className={cx(
           "grid size-9 shrink-0 place-items-center rounded-full border-2 font-club-sign text-sm",
-          disabled ? "border-club-disabled text-club-disabled" : "border-club-accent text-club-accent",
+          disabled ? "border-club-disabled text-club-disabled" : "border-club-text text-club-text",
         )}
       >
         {index}
       </span>
       <span className="min-w-0 flex-1">
-        <span className={cx("block truncate font-club-serif text-lg leading-tight", disabled ? "text-club-disabled" : "text-club-text")}>
+        <span className={cx("line-clamp-2 font-club-serif text-lg leading-tight", disabled ? "text-club-disabled" : "text-club-text")}>
           {facility.name}
         </span>
         <span className="font-club-mono text-xs text-club-muted">
@@ -140,7 +158,7 @@ export function ListRow({ facility, index, href = "#", selected = false, force }
       </svg>
     </>
   );
-  const rowBase = "flex items-center gap-4 border-l-4 px-4 py-3";
+  const rowBase = "flex min-w-0 items-center gap-4 border-l-4 px-4 py-3";
 
   if (disabled) {
     return (
@@ -154,9 +172,17 @@ export function ListRow({ facility, index, href = "#", selected = false, force }
       href={href}
       data-force={force}
       aria-current={selected ? "true" : undefined}
+      onClick={
+        onSelect
+          ? (e) => {
+              e.preventDefault();
+              onSelect();
+            }
+          : undefined
+      }
       className={cx(
         rowBase,
-        "border-transparent transition-colors outline-none state-hover:bg-club-accent/5 state-active:bg-club-accent/10 aria-[current=true]:border-club-accent aria-[current=true]:bg-club-accent/10 state-focus:ring-2 state-focus:ring-inset state-focus:ring-club-focus",
+        "border-transparent transition-colors outline-none state-hover:bg-club-text/5 state-active:bg-club-text/10 aria-[current=true]:border-club-select aria-[current=true]:bg-club-text/[0.07] state-focus:ring-2 state-focus:ring-inset state-focus:ring-club-focus",
       )}
     >
       {inner}
@@ -176,7 +202,7 @@ export function DetailPanel({ facility, titleId, onCloseSlot, actions }: PanelPr
   const badge = statusBadge[facility.status];
   return (
     <section className="flex flex-col bg-club-surface text-club-text">
-      <header className="flex items-start justify-between gap-4 border-b-[3px] border-double border-club-accent px-6 pb-4 pt-6">
+      <header className="flex items-start justify-between gap-4 border-b-[3px] border-double border-club-text px-6 pb-4 pt-6">
         <div>
           <p className="font-club-sign text-xs font-medium uppercase tracking-[0.2em] text-club-flag">
             {facility.area} · {facility.distance}

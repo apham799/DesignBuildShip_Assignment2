@@ -65,7 +65,7 @@ export function Toast({ children, action }: { children: ReactNode; action?: Reac
   return (
     <div
       role="status"
-      className="flex items-center gap-4 rounded-sm bg-club-accent px-4 py-3 text-club-on-accent shadow-[0_24px_60px_-20px_rgba(22,54,42,0.6)]"
+      className="flex items-center gap-4 rounded-sm bg-club-select px-4 py-3 text-club-on-select shadow-[0_24px_60px_-20px_rgba(22,54,42,0.6)]"
     >
       <svg viewBox="0 0 20 20" className="size-5 shrink-0" aria-hidden fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M5 10.5 L8.5 14 L15 6.5" />

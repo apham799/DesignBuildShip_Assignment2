@@ -6,7 +6,7 @@ import { cx, focusRing, type Force } from "./shared";
 const labelStyle = "font-club-sign text-xs font-medium uppercase tracking-[0.2em]";
 
 const controlBase =
-  "h-11 w-full rounded-sm border border-club-edge bg-club-field px-3 font-club-serif text-base text-club-text placeholder:text-club-muted transition-colors outline-none state-hover:border-club-text state-focus:border-club-accent state-focus:ring-2 state-focus:ring-club-focus state-focus:ring-offset-2 state-focus:ring-offset-club-surface aria-invalid:border-2 aria-invalid:border-club-error disabled:cursor-not-allowed disabled:border-club-disabled-bg disabled:bg-club-disabled-bg disabled:text-club-disabled disabled:placeholder:text-club-disabled";
+  "h-11 w-full rounded-sm border border-club-edge bg-club-field px-3 font-club-serif text-base text-club-text placeholder:text-club-muted transition-colors outline-none state-hover:border-club-text state-focus:border-club-text state-focus:ring-2 state-focus:ring-club-focus state-focus:ring-offset-2 state-focus:ring-offset-club-surface aria-invalid:border-2 aria-invalid:border-club-error disabled:cursor-not-allowed disabled:border-club-disabled-bg disabled:bg-club-disabled-bg disabled:text-club-disabled disabled:placeholder:text-club-disabled";
 
 function ErrorIcon() {
   return (
@@ -137,11 +137,19 @@ export function Select({ label, hint, error, force, disabled, options, className
 type SearchFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, "id" | "type"> & {
   label: string;
   force?: Force;
+  // Pass value to control the field from outside; otherwise it keeps its own state.
+  value?: string;
+  onValueChange?: (value: string) => void;
 };
 
-export function SearchField({ label, force, defaultValue = "", disabled, className, ...rest }: SearchFieldProps) {
+export function SearchField({ label, force, defaultValue = "", value: controlled, disabled, className, onValueChange, ...rest }: SearchFieldProps) {
   const id = useId();
-  const [value, setValue] = useState(String(defaultValue));
+  const [internal, setInternal] = useState(String(defaultValue));
+  const value = controlled ?? internal;
+  const setValue = (v: string) => {
+    setInternal(v);
+    onValueChange?.(v);
+  };
   return (
     <div className="flex flex-col gap-1.5">
       <label htmlFor={id} className="sr-only">
@@ -175,7 +183,7 @@ export function SearchField({ label, force, defaultValue = "", disabled, classNa
             aria-label="Clear search"
             onClick={() => setValue("")}
             className={cx(
-              "absolute right-2 top-1/2 grid size-7 -translate-y-1/2 place-items-center rounded-sm text-club-muted state-hover:bg-club-accent/10 state-hover:text-club-text",
+              "absolute right-2 top-1/2 grid size-7 -translate-y-1/2 place-items-center rounded-sm text-club-muted state-hover:bg-club-text/5 state-hover:text-club-text",
               focusRing,
             )}
           >
@@ -230,13 +238,13 @@ export function Checkbox({ label, description, force, indeterminate = false, dis
           disabled={disabled}
           className={cx(
             boxBase,
-            "rounded-sm checked:border-club-accent checked:bg-club-accent indeterminate:border-club-accent indeterminate:bg-club-accent checked:state-hover:border-club-accent-hover checked:state-hover:bg-club-accent-hover disabled:checked:border-club-disabled disabled:checked:bg-club-disabled disabled:indeterminate:bg-club-disabled",
+            "rounded-sm checked:border-club-select checked:bg-club-select indeterminate:border-club-select indeterminate:bg-club-select checked:state-hover:border-club-select-hover checked:state-hover:bg-club-select-hover disabled:checked:border-club-disabled disabled:checked:bg-club-disabled disabled:indeterminate:bg-club-disabled",
             focusRing,
           )}
           {...rest}
         />
-        <CheckIcon className="pointer-events-none col-start-1 row-start-1 hidden size-3.5 text-club-on-accent peer-checked:block" />
-        <svg viewBox="0 0 16 16" aria-hidden className="pointer-events-none col-start-1 row-start-1 hidden size-3.5 text-club-on-accent peer-indeterminate:block">
+        <CheckIcon className="pointer-events-none col-start-1 row-start-1 hidden size-3.5 text-club-on-select peer-checked:block" />
+        <svg viewBox="0 0 16 16" aria-hidden className="pointer-events-none col-start-1 row-start-1 hidden size-3.5 text-club-on-select peer-indeterminate:block">
           <rect x="3" y="7" width="10" height="2.2" rx="1" fill="currentColor" />
         </svg>
       </span>
@@ -255,7 +263,7 @@ export function Radio({ label, description, force, disabled, className, ...rest 
           disabled={disabled}
           className={cx(
             boxBase,
-            "rounded-full checked:border-club-accent checked:bg-club-accent checked:shadow-[inset_0_0_0_3px_#FFFCF4] checked:state-hover:border-club-accent-hover checked:state-hover:bg-club-accent-hover disabled:checked:border-club-disabled disabled:checked:bg-club-disabled",
+            "rounded-full checked:border-club-select checked:bg-club-select checked:shadow-[inset_0_0_0_3px_#FFFCF4] checked:state-hover:border-club-select-hover checked:state-hover:bg-club-select-hover disabled:checked:border-club-disabled disabled:checked:bg-club-disabled",
             focusRing,
           )}
           {...rest}
@@ -269,14 +277,17 @@ export function Radio({ label, description, force, disabled, className, ...rest 
 type ToggleProps = {
   label: string;
   defaultOn?: boolean;
+  // Pass on to control the toggle from outside; otherwise it keeps its own state.
+  on?: boolean;
   disabled?: boolean;
   force?: Force;
   onChange?: (on: boolean) => void;
 };
 
-export function Toggle({ label, defaultOn = false, disabled, force, onChange }: ToggleProps) {
+export function Toggle({ label, defaultOn = false, on: controlled, disabled, force, onChange }: ToggleProps) {
   const id = useId();
-  const [on, setOn] = useState(defaultOn);
+  const [internal, setOn] = useState(defaultOn);
+  const on = controlled ?? internal;
   return (
     <span className="inline-flex items-center gap-3">
       <button
@@ -291,7 +302,7 @@ export function Toggle({ label, defaultOn = false, disabled, force, onChange }: 
           onChange?.(!on);
         }}
         className={cx(
-          "group relative inline-flex h-6 w-11 shrink-0 items-center rounded-full bg-club-edge transition-colors state-hover:bg-club-text aria-checked:bg-club-accent aria-checked:state-hover:bg-club-accent-hover disabled:cursor-not-allowed disabled:bg-club-disabled-bg disabled:aria-checked:bg-club-disabled",
+          "group relative inline-flex h-6 w-11 shrink-0 items-center rounded-full bg-club-edge transition-colors state-hover:bg-club-text aria-checked:bg-club-select aria-checked:state-hover:bg-club-select-hover disabled:cursor-not-allowed disabled:bg-club-disabled-bg disabled:aria-checked:bg-club-disabled",
           focusRing,
         )}
       >

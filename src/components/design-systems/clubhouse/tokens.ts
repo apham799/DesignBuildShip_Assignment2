@@ -41,9 +41,10 @@ export const colorRoles: { group: string; roles: ColorRole[] }[] = [
   {
     group: "Action",
     roles: [
-      { name: "Accent", token: "club-accent", hex: "#1F4D3A", usage: "Primary buttons, links, selected states", on: { ...surface, min: 4.5 } },
+      { name: "Accent", token: "club-accent", hex: "#1F4D3A", usage: "Reserved for the primary action, plus link text", on: { ...surface, min: 4.5 } },
       { name: "On accent", token: "club-on-accent", hex: "#F3EBD8", usage: "Text and icons on the accent", on: { name: "accent", hex: "#1F4D3A", min: 4.5 } },
       { name: "Accent hover", token: "club-accent-hover", hex: "#16362A", usage: "Hover and pressed for accent fills", on: { name: "on accent", hex: "#F3EBD8", min: 4.5 } },
+      { name: "Selected", token: "club-select", hex: "#2B2A28", usage: "Checked boxes, toggles, selected chips, tabs, rows", on: { name: "on select", hex: "#F8F2E4", min: 4.5 } },
       { name: "Flag", token: "club-flag", hex: "#B23A2E", usage: "Secondary emphasis, destructive actions", on: { ...surface, min: 4.5 } },
     ],
   },

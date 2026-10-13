@@ -12,9 +12,9 @@ const variants: Record<Variant, string> = {
   primary:
     "border-club-accent bg-club-accent text-club-on-accent state-hover:border-club-accent-hover state-hover:bg-club-accent-hover state-active:bg-club-accent-hover state-active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.35)] disabled:border-club-disabled-bg disabled:bg-club-disabled-bg disabled:text-club-disabled",
   secondary:
-    "border-club-accent bg-transparent text-club-accent state-hover:bg-club-accent/10 state-active:bg-club-accent/20 disabled:border-club-disabled disabled:bg-transparent disabled:text-club-disabled",
+    "border-club-text bg-transparent text-club-text state-hover:bg-club-text/5 state-active:bg-club-text/10 disabled:border-club-disabled disabled:bg-transparent disabled:text-club-disabled",
   ghost:
-    "border-transparent bg-transparent text-club-accent underline-offset-4 state-hover:bg-club-accent/5 state-hover:underline state-active:bg-club-accent/10 disabled:text-club-disabled disabled:no-underline",
+    "border-transparent bg-transparent text-club-text underline-offset-4 state-hover:bg-club-text/5 state-hover:underline state-active:bg-club-text/10 disabled:text-club-disabled disabled:no-underline",
   danger:
     "border-club-flag bg-club-flag text-club-surface state-hover:border-club-flag-hover state-hover:bg-club-flag-hover state-active:bg-club-flag-hover state-active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.35)] disabled:border-club-disabled-bg disabled:bg-club-disabled-bg disabled:text-club-disabled",
 };
@@ -64,6 +64,22 @@ export function Button({
   );
 }
 
+type ButtonLinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
+  href: string;
+  variant?: Variant;
+  size?: Size;
+  force?: Force;
+};
+
+// A link that looks like a button, for calls to action that navigate or jump to a section.
+export function ButtonLink({ href, variant = "primary", size = "md", force, className, children, ...rest }: ButtonLinkProps) {
+  return (
+    <Link href={href} data-force={force} className={cx(base, variants[variant], sizes[size], focusRing, className)} {...rest}>
+      {children}
+    </Link>
+  );
+}
+
 type TextLinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
   href: string;
   external?: boolean;
@@ -77,7 +93,9 @@ export function TextLink({ href, external = false, force, className, children, .
   const classes = cx(linkStyle, focusRing, className);
   if (external) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" data-force={force} className={classes} {...rest}>
+      // relative keeps the visually hidden "(opens in a new tab)" inside the link, so it
+      // can't escape a scroll container and widen the page.
+      <a href={href} target="_blank" rel="noopener noreferrer" data-force={force} className={cx("relative", classes)} {...rest}>
         {children}
         <span aria-hidden> ↗</span>
         <span className="sr-only"> (opens in a new tab)</span>

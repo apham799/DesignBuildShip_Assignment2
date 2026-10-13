@@ -32,7 +32,7 @@ export function Tab({ selected = false, count, force, className, children, ...re
   );
 }
 
-export const tabTrack = "inline-flex gap-1 rounded-full border border-night-rule bg-night-field p-1";
+export const tabTrack = "inline-flex max-w-full flex-wrap gap-1 rounded-[1.375rem] border border-night-rule bg-night-field p-1";
 
 type TabItem = { id: string; label: string; count?: number; disabled?: boolean; panel?: ReactNode };
 

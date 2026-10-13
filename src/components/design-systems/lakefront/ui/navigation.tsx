@@ -58,7 +58,7 @@ export function Tabs({ items, label, defaultSelected }: { items: TabItem[]; labe
   const active = items.find((i) => i.id === selected);
   return (
     <div>
-      <div role="tablist" aria-label={label} className="inline-flex border-2 border-line-accent" onKeyDown={onKeyDown}>
+      <div role="tablist" aria-label={label} className="inline-flex max-w-full flex-wrap border-2 border-line-accent" onKeyDown={onKeyDown}>
         {items.map((t) => (
           <Tab
             key={t.id}

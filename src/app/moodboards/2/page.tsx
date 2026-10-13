@@ -105,7 +105,7 @@ export default function LakefrontMoodBoard() {
               <p className="font-line-mono text-xs uppercase tracking-[0.3em] text-line-yellow">
                 Mood Board 02
               </p>
-              <h1 className="mt-3 text-7xl font-black uppercase leading-[0.85] tracking-tighter [font-stretch:70%] md:text-8xl">
+              <h1 className="mt-3 text-6xl font-black uppercase min-[400px]:text-7xl leading-[0.85] tracking-tighter [font-stretch:70%] md:text-8xl">
                 Lakefront
                 <br />
                 Line

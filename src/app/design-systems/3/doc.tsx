@@ -29,7 +29,7 @@ export function StateGrid({ columns, rows, minCell = "9rem" }: { columns: string
   const hasLabels = rows.some((r) => r.label);
   const template = `${hasLabels ? "6.5rem " : ""}repeat(${columns.length}, minmax(${minCell}, 1fr))`;
   return (
-    <div className="overflow-x-auto rounded-3xl border border-night-rule bg-night-surface">
+    <div className="relative overflow-x-auto rounded-3xl border border-night-rule bg-night-surface">
       <div className="grid min-w-max gap-x-4 gap-y-5 p-5" style={{ gridTemplateColumns: template }}>
         {hasLabels && <span />}
         {columns.map((c) => (

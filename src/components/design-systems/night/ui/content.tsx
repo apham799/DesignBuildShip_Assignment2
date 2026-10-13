@@ -135,7 +135,7 @@ export function ListRow({ facility, index, href = "#", selected = false, force }
       </svg>
     </>
   );
-  const rowBase = "flex items-center gap-4 px-4 py-3";
+  const rowBase = "flex min-w-0 items-center gap-4 px-4 py-3";
 
   if (disabled) {
     return (

@@ -51,7 +51,7 @@ export function CloseButton({ onClick, label = "Close" }: { onClick?: () => void
       aria-label={label}
       onClick={onClick}
       className={cx(
-        "grid size-9 shrink-0 place-items-center rounded-sm text-club-muted transition-colors state-hover:bg-club-accent/10 state-hover:text-club-text",
+        "grid size-9 shrink-0 place-items-center rounded-sm text-club-muted transition-colors state-hover:bg-club-text/5 state-hover:text-club-text",
         focusRing,
       )}
     >

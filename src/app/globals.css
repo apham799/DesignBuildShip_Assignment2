@@ -55,6 +55,10 @@
   --color-club-accent: #1f4d3a;
   --color-club-accent-hover: #16362a;
   --color-club-on-accent: #f3ebd8;
+  /* Selection uses ink so the green fill stays reserved for primary actions. */
+  --color-club-select: #2b2a28;
+  --color-club-select-hover: #46433d;
+  --color-club-on-select: #f8f2e4;
   --color-club-flag: #b23a2e;
   --color-club-flag-hover: #8f2d23;
   --color-club-focus: #3e6e8e;
@@ -206,6 +210,14 @@
   }
   &[data-force="active"] {
     @slot;
+  }
+}
+
+/* In-page links glide to their section, unless the visitor prefers reduced motion.
+   data-scroll-behavior on <html> keeps page-to-page navigation instant. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
   }
 }
 

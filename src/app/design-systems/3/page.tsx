@@ -138,7 +138,7 @@ export default function NightDesignSystem() {
             >
               {colorRoles.map((group) => (
                 <Block key={group.group} title={group.group}>
-                  <div className="overflow-x-auto rounded-3xl border border-night-rule bg-night-surface">
+                  <div className="relative overflow-x-auto rounded-3xl border border-night-rule bg-night-surface">
                     <table className="w-full min-w-[40rem] table-fixed border-collapse text-left">
                       <colgroup>
                         <col className="w-[30%]" />
@@ -440,16 +440,16 @@ export default function NightDesignSystem() {
                   rows={[
                     {
                       cells: [
-                        <FilterChip key="r">Grass tees</FilterChip>,
-                        <FilterChip key="h" force="hover">Grass tees</FilterChip>,
-                        <FilterChip key="f" force="focus">Grass tees</FilterChip>,
-                        <FilterChip key="p" force="active">Grass tees</FilterChip>,
-                        <FilterChip key="s" selected>Grass tees</FilterChip>,
-                        <FilterChip key="d" disabled>Grass tees</FilterChip>,
+                        <FilterChip key="r">Indoor</FilterChip>,
+                        <FilterChip key="h" force="hover">Indoor</FilterChip>,
+                        <FilterChip key="f" force="focus">Indoor</FilterChip>,
+                        <FilterChip key="p" force="active">Indoor</FilterChip>,
+                        <FilterChip key="s" selected>Indoor</FilterChip>,
+                        <FilterChip key="d" disabled>Indoor</FilterChip>,
                       ],
                     },
                   ]}
-                  minCell="8rem"
+                  minCell="7rem"
                 />
               </Block>
             </Section>
@@ -495,8 +495,8 @@ export default function NightDesignSystem() {
                     { label: "Selected", facility: facilities[0], selected: true },
                     { label: "Disabled", facility: facilities[3] },
                   ].map((r, i) => (
-                    <div key={r.label} className="grid grid-cols-[5.5rem_1fr] items-center">
-                      <span className="px-4 font-night-mono text-[10px] uppercase tracking-[0.1em] text-night-muted">{r.label}</span>
+                    <div key={r.label} className="grid grid-cols-1 items-center sm:grid-cols-[5.5rem_minmax(0,1fr)]">
+                      <span className="px-4 pt-3 font-night-mono text-[10px] uppercase tracking-[0.1em] text-night-muted sm:pt-0">{r.label}</span>
                       <ListRow facility={r.facility} index={i + 1} force={r.force} selected={r.selected} />
                     </div>
                   ))}

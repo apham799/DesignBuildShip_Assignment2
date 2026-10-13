@@ -161,7 +161,7 @@ export function ListRow({ facility, href = "#", selected = false, force }: RowPr
       </span>
     </>
   );
-  const rowBase = "flex items-center gap-4 px-4";
+  const rowBase = "flex min-w-0 items-center gap-4 px-4";
 
   if (disabled) {
     return (

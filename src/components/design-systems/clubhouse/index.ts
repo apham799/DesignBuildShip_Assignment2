@@ -1,5 +1,5 @@
 // Design System 01 — Clubhouse Almanac. Import components from here.
-export { Button, TextLink } from "./ui/button";
+export { Button, ButtonLink, TextLink } from "./ui/button";
 export { Checkbox, Field, Radio, SearchField, Select, TextInput, Toggle } from "./ui/fields";
 export { FilterChip, Tab, Tabs } from "./ui/navigation";
 export { Badge, DetailPanel, FacilityCard, ListRow, Stat } from "./ui/content";

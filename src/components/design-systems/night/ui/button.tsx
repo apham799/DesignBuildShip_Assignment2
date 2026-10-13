@@ -79,7 +79,9 @@ export function TextLink({ href, external = false, force, className, children, .
   const classes = cx(linkStyle, focusRing, className);
   if (external) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" data-force={force} className={classes} {...rest}>
+      // relative keeps the visually hidden "(opens in a new tab)" inside the link, so it
+      // can't escape a scroll container and widen the page.
+      <a href={href} target="_blank" rel="noopener noreferrer" data-force={force} className={cx("relative", classes)} {...rest}>
         {children}
         <span aria-hidden> ↗</span>
         <span className="sr-only"> (opens in a new tab)</span>

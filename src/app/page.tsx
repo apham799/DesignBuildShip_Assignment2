@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { ClubhousePreview, LakefrontPreview, NightPreview } from "@/components/design-systems/previews";
+import { ClubhousePreview, GuidePreview, LakefrontPreview, NightPreview } from "@/components/design-systems/previews";
 
 type Entry = {
   label: string;
@@ -80,9 +80,11 @@ const sections: { heading: string; entries: Entry[] }[] = [
     entries: [
       {
         label: "→",
-        title: "Chicago Range Guide",
-        description: "The finished guide, built in the chosen design system.",
-        status: "Not started",
+        title: "Practice Facility Guide",
+        description: "The finished guide to Chicago practice facilities, built in Design System 01: Clubhouse Almanac.",
+        href: "/practice-facility-guide",
+        status: "Draft",
+        preview: <GuidePreview />,
       },
     ],
   },

@@ -19,7 +19,7 @@ export function Tab({ selected = false, count, force, className, children, ...re
       aria-selected={selected}
       data-force={force}
       className={cx(
-        "-mb-px inline-flex h-11 items-center gap-2 rounded-t-sm border-b-[3px] border-transparent px-1 font-club-sign text-sm font-medium uppercase tracking-[0.18em] text-club-muted transition-colors state-hover:border-club-rule state-hover:text-club-text aria-selected:border-club-accent aria-selected:text-club-accent aria-selected:state-hover:border-club-accent disabled:cursor-not-allowed disabled:text-club-disabled",
+        "-mb-px inline-flex h-11 items-center gap-2 rounded-t-sm border-b-[3px] border-transparent px-1 font-club-sign text-sm font-medium uppercase tracking-[0.18em] text-club-muted transition-colors state-hover:border-club-rule state-hover:text-club-text aria-selected:border-club-select aria-selected:text-club-select aria-selected:state-hover:border-club-select disabled:cursor-not-allowed disabled:text-club-disabled",
         focusRing,
         className,
       )}
@@ -33,10 +33,16 @@ export function Tab({ selected = false, count, force, className, children, ...re
 
 type TabItem = { id: string; label: string; count?: number; disabled?: boolean; panel?: ReactNode };
 
-export function Tabs({ items, label, defaultSelected }: { items: TabItem[]; label: string; defaultSelected?: string }) {
+type TabsProps = { items: TabItem[]; label: string; defaultSelected?: string; onChange?: (id: string) => void };
+
+export function Tabs({ items, label, defaultSelected, onChange }: TabsProps) {
   const baseId = useId();
   const enabled = items.filter((i) => !i.disabled);
-  const [selected, setSelected] = useState(defaultSelected ?? enabled[0]?.id);
+  const [selected, setSelectedState] = useState(defaultSelected ?? enabled[0]?.id);
+  const setSelected = (id: string) => {
+    setSelectedState(id);
+    onChange?.(id);
+  };
   const refs = useRef(new Map<string, HTMLButtonElement>());
 
   // Arrow keys move between tabs; Home and End jump to the ends.
@@ -57,7 +63,7 @@ export function Tabs({ items, label, defaultSelected }: { items: TabItem[]; labe
   const active = items.find((i) => i.id === selected);
   return (
     <div>
-      <div role="tablist" aria-label={label} className="flex gap-6 border-b border-club-rule" onKeyDown={onKeyDown}>
+      <div role="tablist" aria-label={label} className="flex flex-wrap gap-x-6 border-b border-club-rule" onKeyDown={onKeyDown}>
         {items.map((t) => (
           <Tab
             key={t.id}
@@ -104,7 +110,7 @@ export function FilterChip({ selected = false, count, force, className, children
       aria-pressed={selected}
       data-force={force}
       className={cx(
-        "inline-flex h-8 items-center gap-1.5 rounded-full border border-club-edge bg-club-surface px-3 font-club-sign text-xs font-medium uppercase tracking-[0.15em] text-club-text transition-colors state-hover:border-club-accent state-hover:bg-club-accent/5 state-active:bg-club-accent/15 aria-pressed:border-club-accent aria-pressed:bg-club-accent aria-pressed:text-club-on-accent aria-pressed:state-hover:bg-club-accent-hover disabled:cursor-not-allowed disabled:border-club-disabled-bg disabled:bg-club-disabled-bg disabled:text-club-disabled",
+        "inline-flex h-8 items-center gap-1.5 rounded-full border border-club-edge bg-club-surface px-3 font-club-sign text-xs font-medium uppercase tracking-[0.15em] text-club-text transition-colors state-hover:border-club-text state-hover:bg-club-text/5 state-active:bg-club-text/10 aria-pressed:border-club-select aria-pressed:bg-club-select aria-pressed:text-club-on-select aria-pressed:state-hover:bg-club-select-hover disabled:cursor-not-allowed disabled:border-club-disabled-bg disabled:bg-club-disabled-bg disabled:text-club-disabled",
         focusRing,
         className,
       )}

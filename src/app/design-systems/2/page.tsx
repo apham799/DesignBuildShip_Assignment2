@@ -151,7 +151,7 @@ export default function LakefrontDesignSystem() {
           >
             {colorRoles.map((group) => (
               <Block key={group.group} title={group.group}>
-                <div className="overflow-x-auto border border-line-text bg-line-surface">
+                <div className="relative overflow-x-auto border border-line-text bg-line-surface">
                   <table className="w-full min-w-[40rem] table-fixed border-collapse text-left">
                     <colgroup>
                       <col className="w-[30%]" />
@@ -527,8 +527,8 @@ export default function LakefrontDesignSystem() {
                   { label: "Selected", facility: facilities[0], selected: true },
                   { label: "Disabled", facility: facilities[3] },
                 ].map((r, i) => (
-                  <div key={r.label} className="grid grid-cols-[5.5rem_1fr] items-stretch border-b border-line-rule last:border-0">
-                    <span className="flex items-center px-3 font-line-mono text-[11px] uppercase text-line-muted">{r.label}</span>
+                  <div key={r.label} className="grid grid-cols-1 items-stretch border-b border-line-rule last:border-0 sm:grid-cols-[5.5rem_minmax(0,1fr)]">
+                    <span className="flex items-center px-3 pt-3 font-line-mono text-[11px] uppercase text-line-muted sm:pt-0">{r.label}</span>
                     <ListRow facility={r.facility} index={i + 1} force={r.force} selected={r.selected} />
                   </div>
                 ))}
