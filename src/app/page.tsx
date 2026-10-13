@@ -1,4 +1,6 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
+import { ClubhousePreview, LakefrontPreview, NightPreview } from "@/components/design-systems/previews";
 
 type Entry = {
   label: string;
@@ -7,6 +9,8 @@ type Entry = {
   href?: string;
   status: string;
   swatches?: string[];
+  // A live sample of a design system's components, shown instead of swatches.
+  preview?: ReactNode;
 };
 
 const sections: { heading: string; entries: Entry[] }[] = [
@@ -51,7 +55,7 @@ const sections: { heading: string; entries: Entry[] }[] = [
         description: "UI kit from Mood Board 01: color and type roles, components in every state, and UI states.",
         href: "/design-systems/1",
         status: "Draft",
-        swatches: ["#E9DFC8", "#F8F2E4", "#2B2A28", "#1F4D3A", "#B23A2E", "#3E6E8E"],
+        preview: <ClubhousePreview />,
       },
       {
         label: "02",
@@ -59,7 +63,7 @@ const sections: { heading: string; entries: Entry[] }[] = [
         description: "UI kit from Mood Board 02: transit-sign components, signal colors, every state, and UI states.",
         href: "/design-systems/2",
         status: "Draft",
-        swatches: ["#F2F2EE", "#FFFFFF", "#111315", "#0071A8", "#F9E300", "#C60C30"],
+        preview: <LakefrontPreview />,
       },
       {
         label: "03",
@@ -67,7 +71,7 @@ const sections: { heading: string; entries: Entry[] }[] = [
         description: "UI kit from Mood Board 03: dark arcade components that glow, every state, and UI states.",
         href: "/design-systems/3",
         status: "Draft",
-        swatches: ["#07090F", "#141B2E", "#F4F1E8", "#C8FF4D", "#5CE1E6", "#A99DFF"],
+        preview: <NightPreview />,
       },
     ],
   },
@@ -84,43 +88,61 @@ const sections: { heading: string; entries: Entry[] }[] = [
   },
 ];
 
-function EntryCard({ entry }: { entry: Entry }) {
-  const body = (
-    <>
-      {entry.swatches ? (
-        <div className="flex h-24">
-          {entry.swatches.map((c) => (
-            <span key={c} className="flex-1" style={{ backgroundColor: c }} />
-          ))}
-        </div>
-      ) : (
-        <div className="h-24 bg-[repeating-linear-gradient(135deg,transparent_0_10px,rgba(0,0,0,0.04)_10px_20px)]" />
-      )}
-      <div className="flex flex-1 flex-col gap-2 p-5">
-        <div className="flex items-baseline justify-between font-mono text-xs text-stone-500">
-          <span>{entry.label}</span>
-          <span>{entry.status}</span>
-        </div>
-        <h3 className="text-lg font-semibold tracking-tight">{entry.title}</h3>
-        <p className="text-sm text-stone-600">{entry.description}</p>
+function EntryVisual({ entry }: { entry: Entry }) {
+  if (entry.preview) {
+    // inert: the sample controls can't be focused or clicked; the card link handles clicks.
+    return (
+      <div inert aria-hidden className="pointer-events-none h-36 select-none border-b border-stone-200">
+        {entry.preview}
       </div>
-    </>
+    );
+  }
+  if (entry.swatches) {
+    return (
+      <div className="flex h-24">
+        {entry.swatches.map((c) => (
+          <span key={c} className="flex-1" style={{ backgroundColor: c }} />
+        ))}
+      </div>
+    );
+  }
+  return <div className="h-24 bg-[repeating-linear-gradient(135deg,transparent_0_10px,rgba(0,0,0,0.04)_10px_20px)]" />;
+}
+
+function EntryCard({ entry }: { entry: Entry }) {
+  const meta = (
+    <div className="flex items-baseline justify-between font-mono text-xs text-stone-500">
+      <span>{entry.label}</span>
+      <span>{entry.status}</span>
+    </div>
   );
 
   if (!entry.href) {
     return (
       <div className="flex flex-col overflow-hidden rounded-lg border border-dashed border-stone-300 text-stone-400">
-        {body}
+        <EntryVisual entry={entry} />
+        <div className="flex flex-1 flex-col gap-2 p-5">
+          {meta}
+          <h3 className="text-lg font-semibold tracking-tight">{entry.title}</h3>
+          <p className="text-sm text-stone-600">{entry.description}</p>
+        </div>
       </div>
     );
   }
+  // The title link stretches over the whole card, so the card stays one click target.
   return (
-    <Link
-      href={entry.href}
-      className="flex flex-col overflow-hidden rounded-lg border border-stone-200 bg-white transition hover:-translate-y-0.5 hover:shadow-lg"
-    >
-      {body}
-    </Link>
+    <article className="relative flex flex-col overflow-hidden rounded-lg border border-stone-200 bg-white transition hover:-translate-y-0.5 hover:shadow-lg has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-stone-900 has-[a:focus-visible]:ring-offset-2">
+      <EntryVisual entry={entry} />
+      <div className="flex flex-1 flex-col gap-2 p-5">
+        {meta}
+        <h3 className="text-lg font-semibold tracking-tight">
+          <Link href={entry.href} className="outline-none after:absolute after:inset-0 after:content-['']">
+            {entry.title}
+          </Link>
+        </h3>
+        <p className="text-sm text-stone-600">{entry.description}</p>
+      </div>
+    </article>
   );
 }
 
