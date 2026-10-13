@@ -247,12 +247,19 @@ export function Planner() {
                   setCard((c) => c && { ...c, rows: c.rows.map((r) => (r.drill === drill ? { ...r, note } : r)) })
                 }
               />
-              {/* fixed columns, so the save control keeps its size as its state changes */}
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-[auto_minmax(0,1fr)] print:hidden">
-                <Button variant="secondary" onClick={() => window.print()}>
-                  Print card
+              {/* One row at every width, so nothing moves. Print is icon-only to leave the save
+                  control room; compact size, like the save buttons on the facility cards. */}
+              <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-2 print:hidden">
+                <Button variant="secondary" size="sm" className="w-9 px-0" aria-label="Print card" title="Print card" onClick={() => window.print()}>
+                  {/* viewBox cropped to the drawing so the printer fills the button */}
+                  <svg viewBox="2.5 2.5 19 19" className="size-7 shrink-0" aria-hidden fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round">
+                    <path d="M7 9 V3.5 H17 V9" />
+                    <rect x="3.5" y="9" width="17" height="8" rx="1.5" />
+                    <path d="M7 14 H17 V20.5 H7 Z" fill="var(--color-club-surface, #F8F2E4)" />
+                    <circle cx="17.5" cy="11.75" r="0.9" fill="currentColor" stroke="none" />
+                  </svg>
                 </Button>
-                <SaveControl facilityId={card.facilityId} size="md" label="Save this range to my plan" />
+                <SaveControl facilityId={card.facilityId} />
               </div>
             </div>
           ) : (
