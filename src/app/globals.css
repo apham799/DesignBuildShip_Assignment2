@@ -16,6 +16,10 @@
   --font-club-sign: var(--font-oswald);
   --font-club-mono: var(--font-courier-prime);
   --font-club-hand: var(--font-caveat);
+
+  /* Mood board 02 — Lakefront Line */
+  --font-line-sans: var(--font-archivo);
+  --font-line-mono: var(--font-plex-mono);
 }
 
 @theme {
@@ -33,6 +37,20 @@
   --color-club-sand: #d9c49a;
   --color-club-ink: #2b2a28;
   --color-club-slate: #23302a;
+
+  /* Mood board 02 — Lakefront Line */
+  --color-line-paper: #f2f2ee;
+  --color-line-ink: #111315;
+  --color-line-steel: #3b4046;
+  --color-line-concrete: #9aa0a6;
+  --color-line-aluminum: #d9dcdf;
+  --color-line-lake: #cde9f5;
+  --color-line-green: #009b3a;
+  --color-line-blue: #00a1de;
+  --color-line-purple: #522398;
+  --color-line-red: #c60c30;
+  --color-line-orange: #f9461c;
+  --color-line-yellow: #f9e300;
 }
 
 body {

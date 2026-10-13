@@ -22,7 +22,15 @@ const sections: { heading: string; entries: Entry[] }[] = [
         status: "Draft · 30 artifacts",
         swatches: ["#1F4D3A", "#F3EBD8", "#B23A2E", "#B8893B", "#3E6E8E", "#D9C49A"],
       },
-      { label: "02", title: "Mood Board 02", description: "Theme to come.", status: "Not started" },
+      {
+        label: "02",
+        title: "Lakefront Line",
+        description:
+          "Chicago modernism and transit wayfinding: a Swiss grid, signal colors, glass and steel.",
+        href: "/moodboards/2",
+        status: "Draft · 29 artifacts",
+        swatches: ["#111315", "#F2F2EE", "#009B3A", "#00A1DE", "#522398", "#C60C30", "#F9E300"],
+      },
       { label: "03", title: "Mood Board 03", description: "Theme to come.", status: "Not started" },
     ],
   },
