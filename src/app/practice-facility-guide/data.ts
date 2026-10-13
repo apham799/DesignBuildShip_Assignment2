@@ -160,7 +160,7 @@ export const guideFacilities: GuideFacility[] = [
     status: "closing",
     hours: "Closes in 40 min",
     summary: "A grass range beside a nine-hole course, with a chipping area and a practice bunker that faces the lake.",
-    amenities: ["Grass tees", "Practice bunker", "Putting green"],
+    amenities: ["Grass tees", "Chipping area", "Practice bunker", "Putting green"],
     bays: 32,
     bucket: "$9",
     longest: "260y",

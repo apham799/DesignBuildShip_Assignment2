@@ -140,6 +140,35 @@ export function Finder() {
 
   const detailActions = (f: GuideFacility, onAfter?: () => void) => <DetailActions facility={f} onAfter={onAfter} />;
 
+  // Side panel on laptop and up; phones and tablets get the modal instead.
+  const sidePanel = (
+    <aside aria-label="Facility details" className="hidden lg:block">
+      <div className="sticky top-28 overflow-hidden rounded border border-club-rule shadow-[0_24px_60px_-20px_rgba(22,54,42,0.45)]">
+        {selected ? (
+          <DetailPanel key={selected.id} facility={selected} actions={detailActions(selected)} />
+        ) : (
+          <div className="flex flex-col items-center gap-3 bg-club-surface px-6 py-12 text-center">
+            <svg viewBox="0 0 64 48" className="h-12 w-16" aria-hidden>
+              <ellipse cx="32" cy="40" rx="26" ry="6" fill="#A7B98A" />
+              <line x1="36" y1="40" x2="36" y2="6" stroke="#2B2A28" strokeWidth="2" />
+              <path d="M36 6 L50 11 L36 16 Z" fill="#B23A2E" />
+            </svg>
+            <p className="font-club-serif text-[1.375rem] font-semibold">Pick a facility</p>
+            <p className="max-w-xs font-club-serif text-base text-club-muted">
+              Choose a card or a pin on the map to see hours, buckets, and how to get there.
+            </p>
+          </div>
+        )}
+      </div>
+    </aside>
+  );
+  const withSidePanel = (view: React.ReactNode) => (
+    <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_22rem] xl:grid-cols-[minmax(0,1fr)_24rem]">
+      <div className="min-w-0">{view}</div>
+      {sidePanel}
+    </div>
+  );
+
   return (
     <section id="finder" aria-labelledby="finder-title" className="scroll-mt-24">
       <div className="max-w-2xl">
@@ -193,50 +222,34 @@ export function Finder() {
             })}
           </div>
         </div>
+        {/* filter summary and reset, tucked in the box's bottom-right corner */}
+        <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-1 border-t border-club-rule pt-4">
+          {activeCount > 0 && (
+            <span className="font-club-serif text-sm text-club-muted">
+              {activeCount} {activeCount === 1 ? "filter" : "filters"} on
+            </span>
+          )}
+          <Button variant="ghost" size="sm" disabled={activeCount === 0} onClick={() => setFilters(noFilters)}>
+            Clear filters
+          </Button>
+        </div>
       </div>
 
-      {/* results */}
-      <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_22rem] xl:grid-cols-[minmax(0,1fr)_24rem]">
-        <div className="min-w-0">
-          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <p className="font-club-serif text-lg" aria-live="polite">
-              <span className="font-semibold">{results.length}</span> {results.length === 1 ? "facility" : "facilities"}
-              {activeCount > 0 && <span className="text-club-muted"> · {activeCount} {activeCount === 1 ? "filter" : "filters"} on</span>}
-            </p>
-            <Button variant="ghost" size="sm" disabled={activeCount === 0} onClick={() => setFilters(noFilters)}>
-              Clear filters
-            </Button>
-          </div>
-          <Tabs
-            label="Results view"
-            onChange={setView}
-            items={[
-              { id: "list", label: "List", count: results.length, panel: listView },
-              { id: "map", label: "Map", panel: mapView },
-            ]}
-          />
-        </div>
-
-        {/* side panel on laptop and up */}
-        <aside aria-label="Facility details" className="hidden lg:block">
-          <div className="sticky top-28 overflow-hidden rounded border border-club-rule shadow-[0_24px_60px_-20px_rgba(22,54,42,0.45)]">
-            {selected ? (
-              <DetailPanel key={selected.id} facility={selected} actions={detailActions(selected)} />
-            ) : (
-              <div className="flex flex-col items-center gap-3 bg-club-surface px-6 py-12 text-center">
-                <svg viewBox="0 0 64 48" className="h-12 w-16" aria-hidden>
-                  <ellipse cx="32" cy="40" rx="26" ry="6" fill="#A7B98A" />
-                  <line x1="36" y1="40" x2="36" y2="6" stroke="#2B2A28" strokeWidth="2" />
-                  <path d="M36 6 L50 11 L36 16 Z" fill="#B23A2E" />
-                </svg>
-                <p className="font-club-serif text-[1.375rem] font-semibold">Pick a facility</p>
-                <p className="max-w-xs font-club-serif text-base text-club-muted">
-                  Choose a card or a pin on the map to see hours, buckets, and how to get there.
-                </p>
-              </div>
-            )}
-          </div>
-        </aside>
+      {/* results: the view tabs run full width; under them, the results and the detail panel
+          share a row, so the panel lines up with the first row of cards */}
+      <div className="mt-8">
+        {/* The List tab shows the count visually; this keeps screen readers told as it changes. */}
+        <p className="sr-only" aria-live="polite">
+          {results.length} {results.length === 1 ? "facility matches" : "facilities match"}
+        </p>
+        <Tabs
+          label="Results view"
+          onChange={setView}
+          items={[
+            { id: "list", label: "List", count: results.length, panel: withSidePanel(listView) },
+            { id: "map", label: "Map", panel: withSidePanel(mapView) },
+          ]}
+        />
       </div>
 
       {/* modal on phones and tablets */}

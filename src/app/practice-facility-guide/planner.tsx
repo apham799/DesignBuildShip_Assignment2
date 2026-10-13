@@ -2,7 +2,7 @@
 
 import { useId, useRef, useState, type FormEvent } from "react";
 import { Alert, Button, Checkbox, Radio, Select, TextInput, Toggle } from "@/components/design-systems/clubhouse";
-import { guideFacilities } from "./data";
+import { guideFacilities, type GuideFacility } from "./data";
 import { facilityById, useGuide } from "./guide-context";
 import { SaveControl } from "./save-control";
 
@@ -23,6 +23,19 @@ const drills = [
   { id: "putting", label: "Putting", club: "Putter", target: "3–6 ft circle", note: "15 minutes", weight: 0 },
 ] as const;
 type DrillId = (typeof drills)[number]["id"];
+
+// What a facility needs before a drill makes sense there, and the reason shown when it can't.
+const fullSwing = (f: GuideFacility) => f.kinds.some((k) => k === "range" || k === "dome" || k === "sim") || f.longest === "Nets";
+const hasAmenity = (name: string) => (f: GuideFacility) => f.amenities.includes(name);
+const needs: Record<DrillId, { ok: (f: GuideFacility) => boolean; missing: string }> = {
+  driver: { ok: fullSwing, missing: "No place to hit full shots" },
+  woods: { ok: fullSwing, missing: "No place to hit full shots" },
+  irons: { ok: fullSwing, missing: "No place to hit full shots" },
+  wedges: { ok: fullSwing, missing: "No place to hit full shots" },
+  chipping: { ok: hasAmenity("Chipping area"), missing: "No chipping area" },
+  bunker: { ok: hasAmenity("Practice bunker"), missing: "No practice bunker" },
+  putting: { ok: hasAmenity("Putting green"), missing: "No putting green" },
+};
 
 type Row = { drill: string; club: string; target: string; balls: string; note: string };
 type Card = { number: number; facilityId: string; facility: string; date: string; name: string; bucket: string; rows: Row[]; total: number };
@@ -78,27 +91,35 @@ export function Planner() {
   const formRef = useRef<HTMLFormElement>(null);
   const focusError = useId();
 
+  // Drills the chosen facility can't support are disabled. Picks for them are left off the
+  // card but remembered, so they come back if the player switches to a facility that has them.
+  const facility = plannerFacility ? facilityById(plannerFacility) : undefined;
+  const availableAt = (id: DrillId) => !facility || needs[id].ok(facility);
+  const available = drills.filter((d) => availableAt(d.id)).map((d) => d.id);
+  const activeFocus = focus.filter(availableAt);
+  const leftOff = drills.filter((d) => focus.includes(d.id) && !availableAt(d.id)).map((d) => d.label);
+
   const errors = {
     facility: !plannerFacility ? "Choose a facility for the card." : undefined,
-    focus: focus.length === 0 ? "Pick at least one thing to work on." : undefined,
+    focus: activeFocus.length === 0 ? "Pick at least one thing to work on." : undefined,
     name: name.length > nameLimit ? `Keep it to ${nameLimit} characters so it fits on the card.` : undefined,
   };
   const errorList = Object.values(errors).filter(Boolean);
   const show = (e?: string) => (submitted ? e : undefined);
 
-  const allPicked = focus.length === drills.length;
-  const somePicked = focus.length > 0 && !allPicked;
+  const allPicked = available.length > 0 && activeFocus.length === available.length;
+  const somePicked = activeFocus.length > 0 && !allPicked;
 
   function onSubmit(e: FormEvent) {
     e.preventDefault();
     setSubmitted(true);
     if (errorList.length) {
       // Move focus to the first problem so keyboard and screen reader users land on it.
-      const first = errors.facility ? 'select[name="facility"]' : errors.focus ? 'input[name="focus"]' : 'input[name="name"]';
+      const first = errors.facility ? 'select[name="facility"]' : errors.focus ? 'input[name="focus"]:not(:disabled)' : 'input[name="name"]';
       formRef.current?.querySelector<HTMLElement>(first)?.focus();
       return;
     }
-    const next = buildCard(plannerFacility, bucket, focus, warmup, name);
+    const next = buildCard(plannerFacility, bucket, activeFocus, warmup, name);
     setCard((prev) => {
       if (!prev) return next;
       const edited = new Map(prev.rows.map((r) => [r.drill, r.note]));
@@ -187,7 +208,7 @@ export function Planner() {
                 label="A bit of everything"
                 checked={allPicked}
                 indeterminate={somePicked}
-                onChange={() => setFocus(allPicked ? [] : drills.map((d) => d.id))}
+                onChange={() => setFocus(allPicked ? [] : available)}
               />
             </div>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -197,12 +218,25 @@ export function Planner() {
                   name="focus"
                   value={d.id}
                   label={d.label}
-                  description={d.weight > 0 ? `${d.club} · ${d.target}` : "On the practice green"}
-                  checked={focus.includes(d.id)}
+                  description={
+                    !availableAt(d.id) && facility
+                      ? `${needs[d.id].missing} at ${facility.name}`
+                      : d.weight > 0
+                        ? `${d.club} · ${d.target}`
+                        : "On the practice green"
+                  }
+                  disabled={!availableAt(d.id)}
+                  checked={activeFocus.includes(d.id)}
                   onChange={() => setFocus((cur) => (cur.includes(d.id) ? cur.filter((x) => x !== d.id) : [...cur, d.id]))}
                 />
               ))}
             </div>
+            {/* always mounted so screen readers hear when picks are left off */}
+            <p aria-live="polite" className="font-club-serif text-sm text-club-muted empty:hidden">
+              {leftOff.length > 0 && facility
+                ? `${leftOff.join(", ")} ${leftOff.length === 1 ? "was" : "were"} left off. ${facility.name} isn’t set up for ${leftOff.length === 1 ? "it" : "them"}.`
+                : ""}
+            </p>
             {show(errors.focus) && (
               <p id={focusError} className="mt-3 font-club-serif text-sm text-club-error">
                 {errors.focus}

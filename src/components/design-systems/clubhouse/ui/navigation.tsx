@@ -26,7 +26,7 @@ export function Tab({ selected = false, count, force, className, children, ...re
       {...rest}
     >
       {children}
-      {count !== undefined && <span className="font-club-mono text-xs tracking-normal">{count}</span>}
+      {count !== undefined && <span className="tabular-nums tracking-normal opacity-70">{count}</span>}
     </button>
   );
 }
@@ -122,7 +122,7 @@ export function FilterChip({ selected = false, count, force, className, children
         </svg>
       )}
       {children}
-      {count !== undefined && <span className="font-club-mono tracking-normal opacity-80">{count}</span>}
+      {count !== undefined && <span className="tabular-nums tracking-normal opacity-70">{count}</span>}
     </button>
   );
 }
