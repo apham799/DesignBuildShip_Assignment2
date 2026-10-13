@@ -72,17 +72,18 @@ export function SiteHeader() {
               {plan.length}
             </span>
           </Button>
+          {/* Bordered and the same height as the plan button, with a 44px-wide tap target. */}
           <Button
-            variant="ghost"
+            variant="secondary"
             size="sm"
-            className="w-9 px-0 md:hidden"
+            className="w-11 px-0 md:hidden"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
             aria-controls={menuId}
             onClick={() => setMenuOpen((o) => !o)}
           >
-            <svg viewBox="0 0 16 16" className="size-4" aria-hidden fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              {menuOpen ? <path d="M4 4 L12 12 M12 4 L4 12" /> : <path d="M2.5 4.5 H13.5 M2.5 8 H13.5 M2.5 11.5 H13.5" />}
+            <svg viewBox="0 0 24 24" className="size-6" aria-hidden fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round">
+              {menuOpen ? <path d="M6 6 L18 18 M18 6 L6 18" /> : <path d="M4 7 H20 M4 12 H20 M4 17 H20" />}
             </svg>
           </Button>
         </div>

@@ -302,7 +302,7 @@ export function Toggle({ label, defaultOn = false, on: controlled, disabled, for
           onChange?.(!on);
         }}
         className={cx(
-          "group relative inline-flex h-6 w-11 shrink-0 items-center rounded-full bg-club-edge transition-colors state-hover:bg-club-text aria-checked:bg-club-select aria-checked:state-hover:bg-club-select-hover disabled:cursor-not-allowed disabled:bg-club-disabled-bg disabled:aria-checked:bg-club-disabled",
+          "group relative inline-flex h-6 w-11 shrink-0 items-center rounded-full bg-club-edge transition-colors state-hover:bg-club-text/65 aria-checked:bg-club-select aria-checked:state-hover:bg-club-select-hover disabled:cursor-not-allowed disabled:bg-club-disabled-bg disabled:aria-checked:bg-club-disabled",
           focusRing,
         )}
       >

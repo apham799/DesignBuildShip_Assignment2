@@ -20,6 +20,7 @@ import {
 import { amenityFilters, guideFacilities, regions, sortOptions, type GuideFacility, type Region, type SortKey } from "./data";
 import { facilityById, useGuide, useIsDesktop } from "./guide-context";
 import { LakefrontMap } from "./lakefront-map";
+import { SaveControl } from "./save-control";
 
 type Filters = { query: string; region: "" | Region; openNow: boolean; amenities: string[] };
 const noFilters: Filters = { query: "", region: "", openNow: false, amenities: [] };
@@ -41,7 +42,7 @@ const sorters: Record<SortKey, (a: GuideFacility, b: GuideFacility) => number> =
 };
 
 export function Finder() {
-  const { inPlan, togglePlan } = useGuide();
+  const { inPlan } = useGuide();
   const isDesktop = useIsDesktop();
   const [filters, setFilters] = useState<Filters>(noFilters);
   const [sort, setSort] = useState<SortKey>("near");
@@ -99,9 +100,7 @@ export function Finder() {
               selected={isDesktop && selectedId === f.id}
               onSelect={() => select(f.id)}
               action={
-                <Button variant="secondary" size="sm" className="w-full" aria-pressed={inPlan(f.id)} onClick={() => togglePlan(f.id)}>
-                  {inPlan(f.id) ? "✓ Saved to plan" : "Save to plan"}
-                </Button>
+                <SaveControl facilityId={f.id} />
               }
             />
           </li>
@@ -257,22 +256,13 @@ export function Finder() {
 }
 
 function DetailActions({ facility, onAfter }: { facility: GuideFacility; onAfter?: () => void }) {
-  const { inPlan, togglePlan, planSessionAt } = useGuide();
-  const saved = inPlan(facility.id);
+  const { planSessionAt } = useGuide();
   const closed = facility.status === "closed";
   return (
     <div className="flex w-full flex-col gap-3">
-      <div className="flex flex-wrap gap-3">
-        {/* the one primary action in the panel */}
-        {saved ? (
-          <Button variant="secondary" aria-pressed onClick={() => togglePlan(facility.id)}>
-            ✓ In your plan
-          </Button>
-        ) : (
-          <Button aria-pressed={false} onClick={() => togglePlan(facility.id)}>
-            Add to practice plan
-          </Button>
-        )}
+      <div className="flex flex-col items-start gap-3">
+        {/* the one primary action in the panel; once saved it shows its success state */}
+        <SaveControl facilityId={facility.id} variant="primary" size="md" />
         <Button
           variant="secondary"
           disabled={closed}

@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from "react";
 import { cx, focusRing, Spinner, type Force } from "./shared";
 
-type Variant = "primary" | "secondary" | "ghost" | "danger";
+type Variant = "primary" | "secondary" | "ghost" | "danger" | "success";
 type Size = "sm" | "md";
 
 const base =
@@ -17,6 +17,9 @@ const variants: Record<Variant, string> = {
     "border-transparent bg-transparent text-club-text underline-offset-4 state-hover:bg-club-text/5 state-hover:underline state-active:bg-club-text/10 disabled:text-club-disabled disabled:no-underline",
   danger:
     "border-club-flag bg-club-flag text-club-surface state-hover:border-club-flag-hover state-hover:bg-club-flag-hover state-active:bg-club-flag-hover state-active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.35)] disabled:border-club-disabled-bg disabled:bg-club-disabled-bg disabled:text-club-disabled",
+  // The "done" state of an action, e.g. Save after saving. Use with aria-disabled so it
+  // stays focusable and announced but has no hover or press feedback.
+  success: "border-club-success/40 bg-club-success-tint text-club-success aria-disabled:cursor-default",
 };
 
 const sizes: Record<Size, string> = {

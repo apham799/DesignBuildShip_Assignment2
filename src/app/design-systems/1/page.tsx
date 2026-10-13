@@ -292,6 +292,15 @@ export default function ClubhouseDesignSystem() {
                     Small ghost
                   </Button>
                 </div>
+                <div className="mt-4 flex flex-wrap items-center gap-3">
+                  <Button variant="success" aria-disabled>
+                    ✓ Saved to your plan
+                  </Button>
+                  <p className="max-w-sm font-club-serif text-sm text-club-muted">
+                    Success is the finished state of an action, like Save after saving. It keeps the button&rsquo;s
+                    size and spot, so the layout never jumps. Pair it with a separate way back, like an enabled Remove.
+                  </p>
+                </div>
               </Block>
               <Block title="Links" note="Underlined at rest so they never rely on color alone">
                 <StateGrid

@@ -4,6 +4,7 @@ import { useId, useRef, useState, type FormEvent } from "react";
 import { Alert, Button, Checkbox, Radio, Select, TextInput, Toggle } from "@/components/design-systems/clubhouse";
 import { guideFacilities } from "./data";
 import { facilityById, useGuide } from "./guide-context";
+import { SaveControl } from "./save-control";
 
 const buckets = [
   { id: "small", label: "Small bucket", balls: 40 },
@@ -24,7 +25,7 @@ const drills = [
 type DrillId = (typeof drills)[number]["id"];
 
 type Row = { drill: string; club: string; target: string; balls: string; note: string };
-type Card = { number: number; facility: string; date: string; name: string; bucket: string; rows: Row[]; total: number };
+type Card = { number: number; facilityId: string; facility: string; date: string; name: string; bucket: string; rows: Row[]; total: number };
 
 const nameLimit = 24;
 
@@ -56,6 +57,7 @@ function buildCard(facilityId: string, bucketId: string, focus: DrillId[], warmu
   ];
   return {
     number: Math.floor(1000 + Math.random() * 9000),
+    facilityId,
     facility: facilityById(facilityId)?.name ?? "",
     date: new Date().toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }),
     name: name.trim(),
@@ -66,7 +68,7 @@ function buildCard(facilityId: string, bucketId: string, focus: DrillId[], warmu
 }
 
 export function Planner() {
-  const { plannerFacility, setPlannerFacility, inPlan, togglePlan } = useGuide();
+  const { plannerFacility, setPlannerFacility } = useGuide();
   const [bucket, setBucket] = useState<string>("medium");
   const [focus, setFocus] = useState<DrillId[]>(["irons", "wedges"]);
   const [warmup, setWarmup] = useState(true);
@@ -96,7 +98,12 @@ export function Planner() {
       formRef.current?.querySelector<HTMLElement>(first)?.focus();
       return;
     }
-    setCard(buildCard(plannerFacility, bucket, focus, warmup, name));
+    const next = buildCard(plannerFacility, bucket, focus, warmup, name);
+    setCard((prev) => {
+      if (!prev) return next;
+      const edited = new Map(prev.rows.map((r) => [r.drill, r.note]));
+      return { ...next, number: prev.number, rows: next.rows.map((r) => ({ ...r, note: edited.get(r.drill) ?? r.note })) };
+    });
     requestAnimationFrame(() => document.getElementById("session-card")?.focus());
   }
 
@@ -234,16 +241,18 @@ export function Planner() {
                   {card.total} balls at {card.facility}. Print it, or keep it open on your phone at the tee.
                 </Alert>
               </div>
-              <SessionCard card={card} />
-              <div className="flex flex-wrap gap-3 print:hidden">
+              <SessionCard
+                card={card}
+                onNoteChange={(drill, note) =>
+                  setCard((c) => c && { ...c, rows: c.rows.map((r) => (r.drill === drill ? { ...r, note } : r)) })
+                }
+              />
+              {/* fixed columns, so the save control keeps its size as its state changes */}
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-[auto_minmax(0,1fr)] print:hidden">
                 <Button variant="secondary" onClick={() => window.print()}>
                   Print card
                 </Button>
-                {plannerFacility && !inPlan(plannerFacility) && (
-                  <Button variant="ghost" onClick={() => togglePlan(plannerFacility)}>
-                    Save this range to my plan
-                  </Button>
-                )}
+                <SaveControl facilityId={card.facilityId} size="md" label="Save this range to my plan" />
               </div>
             </div>
           ) : (
@@ -259,7 +268,7 @@ export function Planner() {
   );
 }
 
-function SessionCard({ card }: { card: Card }) {
+function SessionCard({ card, onNoteChange }: { card: Card; onNoteChange: (drill: string, note: string) => void }) {
   return (
     <article
       id="session-card"
@@ -285,13 +294,16 @@ function SessionCard({ card }: { card: Card }) {
           <dd className="font-club-hand text-xl leading-none text-club-lake">{card.name || "________"}</dd>
         </div>
       </dl>
-      <p className="mt-2 font-club-mono text-xs text-club-muted">{card.bucket}</p>
+      <div className="mt-2 flex flex-wrap items-baseline justify-between gap-2">
+        <p className="font-club-mono text-xs text-club-muted">{card.bucket}</p>
+        <p className="font-club-serif text-sm text-club-muted print:hidden">Tap a note to rewrite it.</p>
+      </div>
       {/* scroll sideways on narrow phones rather than squeezing the columns */}
       <div className="mt-4 overflow-x-auto">
         <table className="w-full min-w-[30rem] border-collapse font-club-mono text-xs">
           <thead>
             <tr className="bg-club-text text-club-on-select">
-              {["Drill", "Club", "Target", "Balls", "Notes"].map((h) => (
+              {["Drill", "Club", "Target", "Balls", "Notes ✎"].map((h) => (
                 <th key={h} scope="col" className="border border-club-text px-2 py-1.5 text-left font-normal uppercase tracking-wider">
                   {h}
                 </th>
@@ -307,7 +319,18 @@ function SessionCard({ card }: { card: Card }) {
                 <td className="border border-club-edge/50 px-2 py-1.5">{r.club}</td>
                 <td className="border border-club-edge/50 px-2 py-1.5">{r.target}</td>
                 <td className="border border-club-edge/50 px-2 py-1.5 tabular-nums">{r.balls}</td>
-                <td className="border border-club-edge/50 px-2 py-0 font-club-hand text-lg leading-none text-club-lake">{r.note}</td>
+                <td className="border border-club-edge/50 p-0">
+                  {/* Written in pencil, so it stays editable: hover tints the cell, focus shows the ring. */}
+                  <input
+                    type="text"
+                    value={r.note}
+                    maxLength={40}
+                    onChange={(e) => onNoteChange(r.drill, e.target.value)}
+                    aria-label={`Notes for ${r.drill}`}
+                    placeholder="add a note"
+                    className="block w-full min-w-[9rem] bg-transparent px-2 py-1 font-club-hand text-lg leading-tight text-club-lake placeholder:text-club-muted outline-none transition-colors hover:bg-club-sand/30 focus:bg-club-field focus:ring-2 focus:ring-inset focus:ring-club-focus"
+                  />
+                </td>
               </tr>
             ))}
             <tr className="bg-club-sand/40 font-bold">

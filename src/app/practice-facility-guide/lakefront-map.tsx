@@ -4,6 +4,7 @@
 // so they get hover, focus, pressed, and selected states like any other control.
 import { statusBadge } from "@/components/design-systems/clubhouse";
 import type { GuideFacility } from "./data";
+import { useGuide } from "./guide-context";
 
 const W = 320;
 const H = 440;
@@ -20,6 +21,7 @@ type Props = {
 };
 
 export function LakefrontMap({ facilities, all, selectedId, onSelect }: Props) {
+  const { inPlan } = useGuide();
   const shown = new Set(facilities.map((f) => f.id));
   return (
     <figure className="rounded border border-club-rule bg-club-surface">
@@ -87,7 +89,7 @@ export function LakefrontMap({ facilities, all, selectedId, onSelect }: Props) {
               key={f.id}
               type="button"
               aria-pressed={selected}
-              aria-label={`${i + 1}. ${f.name}, ${statusBadge[f.status].label}`}
+              aria-label={`${i + 1}. ${f.name}, ${statusBadge[f.status].label}${inPlan(f.id) ? ", saved to your plan" : ""}`}
               onClick={() => onSelect(f.id)}
               className={[
                 "group absolute grid size-8 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-2 font-club-sign text-sm transition-[transform,background-color,color] outline-none",
@@ -102,6 +104,8 @@ export function LakefrontMap({ facilities, all, selectedId, onSelect }: Props) {
               style={{ left: `${(f.map.x / W) * 100}%`, top: `${(f.map.y / H) * 100}%` }}
             >
               {i + 1}
+              {/* saved-to-plan star, outlined in cream so it shows on the red selected pin too */}
+              {inPlan(f.id) && <SavedStar className="absolute -right-2 -top-2" />}
               {/* name tag for the selected pin, and on hover or focus for the rest */}
               <span
                 aria-hidden
@@ -117,9 +121,34 @@ export function LakefrontMap({ facilities, all, selectedId, onSelect }: Props) {
           );
         })}
       </div>
-      <figcaption className="border-t border-club-rule px-3 py-2 font-club-mono text-[11px] text-club-muted">
-        Pins match the numbered list · not to scale · sample listings
+      <figcaption className="space-y-2 border-t border-club-rule px-3 py-2.5">
+        <ul aria-label="Map legend" className="flex flex-wrap gap-x-4 gap-y-1.5 font-club-serif text-sm text-club-text">
+          <li className="flex items-center gap-2">
+            <span aria-hidden className="grid size-5 place-items-center rounded-full border-2 border-club-text font-club-sign text-[10px]">1</span>
+            Facility, numbered like the list
+          </li>
+          <li className="flex items-center gap-2">
+            <span aria-hidden className="size-5 rounded-full border-2 border-dashed border-club-edge" />
+            Closed
+          </li>
+          <li className="flex items-center gap-2">
+            <SavedStar />
+            Saved to your plan
+          </li>
+        </ul>
+        <p className="font-club-mono text-[11px] text-club-muted">Not to scale · sample listings</p>
       </figcaption>
     </figure>
+  );
+}
+
+function SavedStar({ className = "" }: { className?: string }) {
+  return (
+    <span
+      aria-hidden
+      className={`grid size-4 place-items-center rounded-full bg-club-flag text-[9px] leading-none text-club-surface ring-2 ring-club-surface ${className}`}
+    >
+      ★
+    </span>
   );
 }
